@@ -1,0 +1,1233 @@
+
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14251d">
+  <title>Matematikos pagalba | VBE</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #f2f6f2;
+      --surface: #ffffff;
+      --surface2: #eaf1eb;
+      --text: #203027;
+      --muted: #829087;
+      --border: #dfe8e0;
+      --green: #267653;
+      --green-dark: #18563c;
+      --green-soft: #e4f1e8;
+      --shadow: 0 10px 32px rgba(25,55,38,.07);
+    }
+
+    body.dark {
+      --bg: #0b1510;
+      --surface: #15221b;
+      --surface2: #1e3024;
+      --text: #e8f0e9;
+      --muted: #9aab9e;
+      --border: #2b3d31;
+      --green: #70c596;
+      --green-dark: #91d8ad;
+      --green-soft: #203c2c;
+      --shadow: 0 10px 32px rgba(0,0,0,.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      transition: background .2s, color .2s;
+    }
+
+    button, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ŠONINIS MENIU */
+
+    .sidebar {
+      width: 255px;
+      min-height: 100vh;
+      background: #14251d;
+      color: white;
+      padding: 26px 17px 20px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 5px;
+      margin-bottom: 38px;
+    }
+
+    .logo {
+      width: 47px;
+      height: 47px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg,#388b60,#1b5e40);
+      box-shadow: 0 6px 18px #0003;
+    }
+
+    .logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .brand-name {
+      font: 800 14px Manrope;
+      color: white;
+    }
+
+    .brand-subtitle {
+      display: block;
+      color: #a2b9aa;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .new-chat {
+      width: 100%;
+      border: 1px solid #385344;
+      border-radius: 11px;
+      background: #243b2d;
+      color: white;
+      padding: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: left;
+      margin-bottom: 32px;
+      transition: .2s;
+    }
+
+    .new-chat:hover, .topic:hover, .about-button:hover {
+      background: #31513d;
+    }
+
+    .menu-label {
+      color: #8fa99a;
+      font-size: 9px;
+      letter-spacing: 1.4px;
+      font-weight: 700;
+      padding: 0 9px;
+      margin-bottom: 13px;
+    }
+
+    .topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .topic {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 10px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: #c4d3c9;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: left;
+      transition: .2s;
+    }
+
+    .topic-icon {
+      width: 22px;
+      color: #85cba1;
+      font-size: 17px;
+      text-align: center;
+    }
+
+    .sidebar-spacer { flex: 1; min-height: 30px; }
+
+    .sidebar-info {
+      background: #20372a;
+      border: 1px solid #355341;
+      border-radius: 13px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    .sidebar-info strong {
+      font-size: 12px;
+      color: #c4efd3;
+    }
+
+    .sidebar-info p {
+      color: #a7bcae;
+      font-size: 10px;
+      line-height: 1.7;
+      margin: 8px 0 0;
+    }
+
+    .about-button {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #385344;
+      background: transparent;
+      color: #dce9df;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .sidebar-footer {
+      color: #829a89;
+      font-size: 9px;
+      padding: 15px 5px 0;
+    }
+
+    /* PAGRINDINIS LANGAS */
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+
+    .topbar {
+      min-height: 67px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .breadcrumb {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .breadcrumb strong { color: var(--text); }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .course-select, .theme-toggle {
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      border-radius: 9px;
+      padding: 10px 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .course-select { cursor: pointer; }
+
+    .theme-toggle:hover, .course-select:focus {
+      border-color: var(--green);
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      border-radius: 30px;
+      padding: 9px 12px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #51ad7b;
+    }
+
+    /* PRADINIS EKRANAS */
+
+    .welcome {
+      width: min(850px,90%);
+      margin: 45px auto 20px;
+      text-align: center;
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border-radius: 30px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .7px;
+      margin-bottom: 22px;
+    }
+
+    .hero-label span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .welcome h1 {
+      color: var(--text);
+      font: 800 clamp(34px,4vw,49px)/1.2 Manrope;
+      letter-spacing: -1.8px;
+      margin: 0;
+    }
+
+    .welcome h1 em {
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .welcome-text {
+      max-width: 520px;
+      margin: 17px auto 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .cards-heading {
+      margin: 35px 0 14px;
+      text-align: left;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 14px;
+      text-align: left;
+    }
+
+    .card {
+      min-height: 135px;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      text-align: left;
+      transition: .2s;
+      box-shadow: 0 3px 12px rgba(25,55,38,.025);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--green);
+      box-shadow: var(--shadow);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .card-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      background: var(--green-soft);
+      border-radius: 11px;
+      color: var(--green-dark);
+      font-size: 19px;
+    }
+
+    .card-arrow { color: var(--muted); font-size: 18px; }
+
+    .card strong {
+      display: block;
+      color: var(--text);
+      font: 700 13px Manrope;
+      margin-bottom: 6px;
+    }
+
+    .card small {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    /* POKALBIS */
+
+    #chat {
+      width: min(850px,90%);
+      margin: 25px auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+    }
+
+    .message {
+      max-width: 88%;
+      padding: 16px 19px;
+      border-radius: 15px;
+      font-size: 13px;
+      line-height: 1.85;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      border-bottom-right-radius: 5px;
+    }
+
+    .assistant {
+      align-self: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-bottom-left-radius: 5px;
+      box-shadow: 0 3px 12px rgba(25,55,38,.035);
+    }
+
+    .assistant h2, .assistant h3 { color: var(--text); }
+
+    /* KLAUSIMO LAUKAS */
+
+    .composer-wrap {
+      width: min(850px,90%);
+      margin: 0 auto 17px;
+      flex-shrink: 0;
+    }
+
+    .composer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 14px 15px 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .composer:focus-within {
+      border-color: var(--green);
+      box-shadow: 0 8px 27px rgba(38,118,83,.11);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 48px;
+      max-height: 180px;
+      resize: vertical;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font: 13px 'DM Sans',sans-serif;
+      padding: 4px 5px;
+    }
+
+    textarea::placeholder { color: var(--muted); }
+
+    .composer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 3px 0;
+    }
+
+    .hint { color: var(--muted); font-size: 10px; }
+
+    .send {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 11px;
+      background: var(--green);
+      color: white;
+      font-size: 22px;
+      transition: .2s;
+    }
+
+    .send:hover {
+      background: var(--green-dark);
+      transform: translateY(-2px);
+    }
+
+    .send:disabled { opacity: .5; cursor: wait; }
+
+    .disclaimer {
+      color: var(--muted);
+      text-align: center;
+      font-size: 9px;
+      margin: 11px 0 0;
+    }
+
+    /* NUOTRAUKOS ĮKĖLIMAS */
+
+    .composer-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .attach-button {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--surface2);
+      color: var(--green-dark);
+      font-size: 19px;
+      transition: .2s;
+    }
+
+    .attach-button:hover {
+      border-color: var(--green);
+      background: var(--green-soft);
+    }
+
+    .image-preview {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 5px 12px;
+    }
+
+    .image-preview.visible { display: flex; }
+
+    .image-preview img {
+      width: 68px;
+      height: 68px;
+      object-fit: cover;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+    }
+
+    .image-preview-name {
+      flex: 1;
+      min-width: 0;
+      color: var(--muted);
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .remove-image {
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .message-image {
+      display: block;
+      max-width: min(280px, 100%);
+      max-height: 240px;
+      margin-top: 9px;
+      border-radius: 10px;
+      object-fit: contain;
+    }
+
+    /* APIE PROJEKTĄ LANGAS */
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(5,15,9,.65);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .about-modal {
+      width: min(440px,100%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 25px 80px #0004;
+      animation: appear .2s ease-out;
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .modal-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-brand .logo { width: 43px; height: 43px; }
+
+    .modal-brand h2 {
+      font: 800 17px Manrope;
+      margin: 0;
+      color: var(--text);
+    }
+
+    .modal-brand p {
+      color: var(--muted);
+      font-size: 10px;
+      margin: 4px 0 0;
+    }
+
+    .close-modal {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 19px;
+    }
+
+    .modal-intro {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+      margin-bottom: 19px;
+    }
+
+    .authors-label {
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      margin-bottom: 10px;
+    }
+
+    .authors {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .author {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .author-number {
+      width: 27px;
+      height: 27px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .modal-footer {
+      border-top: 1px solid var(--border);
+      margin-top: 21px;
+      padding-top: 15px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 10px;
+    }
+
+    /* TELEFONAI */
+
+    @media(max-width:850px) {
+      .sidebar { width: 220px; }
+      .topbar { padding: 0 17px; }
+      .topbar-right { gap: 6px; }
+    }
+
+    @media(max-width:650px) {
+      .layout { display: block; }
+      .sidebar { display: none; }
+
+      .topbar {
+        min-height: 65px;
+        height: auto;
+        padding: 10px 12px;
+        flex-wrap: wrap;
+      }
+
+      .topbar-right { flex-wrap: wrap; }
+      .status { display: none; }
+
+      .welcome { margin-top: 34px; }
+      .welcome h1 { font-size: 34px; }
+      .welcome-text { font-size: 12px; }
+
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .card { min-height: 115px; }
+      .message { max-width: 96%; font-size: 12px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 7 L93 50 L50 93 L7 50 Z" stroke="#D5F1DF" stroke-width="5"/>
+          <path d="M50 7 V93 M7 50 H93" stroke="#D5F1DF" stroke-width="3" opacity=".8"/>
+          <circle cx="50" cy="50" r="9" fill="#D5F1DF"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">Matematikos pagalba</div>
+        <span class="brand-subtitle">Pasiruošimas VBE</span>
+      </div>
+    </div>
+
+    <button class="new-chat" onclick="newChat()">＋ &nbsp; Naujas pokalbis</button>
+
+    <div class="menu-label">MOKYMOSI TEMOS</div>
+
+    <div class="topic-list">
+      <button class="topic" onclick="askTopic('Paaiškink algebrą ir pateik pavyzdžių.')">
+        <span class="topic-icon">𝑥</span> Algebra
+      </button>
+      <button class="topic" onclick="askTopic('Paaiškink funkcijas ir jų grafikus.')">
+        <span class="topic-icon">⌁</span> Funkcijos
+      </button>
+      <button class="topic" onclick="askTopic('Paaiškink išvestines ir pateik pavyzdžių.')">
+        <span class="topic-icon">ƒ′</span> Išvestinės
+      </button>
+      <button class="topic" onclick="askTopic('Padėk išmokti geometriją VBE lygiu.')">
+        <span class="topic-icon">△</span> Geometrija
+      </button>
+      <button class="topic" onclick="askTopic('Paaiškink tikimybes ir statistiką.')">
+        <span class="topic-icon">◷</span> Tikimybės
+      </button>
+      <button class="topic" onclick="askTopic('Paaiškink procentus ir jų taikymą.')">
+        <span class="topic-icon">％</span> Procentai
+      </button>
+    </div>
+
+    <div class="sidebar-spacer"></div>
+
+    <div class="sidebar-info">
+      <strong>✦ Mokykis suprasdamas</strong>
+      <p>Ne tik gauk atsakymą. Suprask, kodėl atliekamas kiekvienas sprendimo žingsnis.</p>
+    </div>
+
+    <button class="about-button" onclick="openAbout()">
+      ⓘ &nbsp; Apie projektą ir autorius
+    </button>
+
+    <div class="sidebar-footer">Matematikos pagalba · VBE</div>
+
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div class="breadcrumb">
+        Matematikos mokytojas / <strong>VBE pasiruošimas</strong>
+      </div>
+
+      <div class="topbar-right">
+        <select id="course" class="course-select" aria-label="Pasirink matematikos kursą">
+          <option value="">Pasirink kursą</option>
+          <option value="B">B kursas</option>
+          <option value="A">A kursas</option>
+        </select>
+
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+          ☾ Tamsus režimas
+        </button>
+
+        <div class="status">
+          <span class="status-dot"></span>
+          Gemini AI
+        </div>
+      </div>
+    </header>
+
+    <section class="welcome" id="welcome">
+
+      <div class="hero-label">
+        <span></span>
+        SVETAINĖ NAUDOJAMA AKADEMINIAMS TIKSLAM IR NĖRA KOMERCINIS PRODUKTAS
+      </div>
+
+      <h1>Matematika gali būti<br><em>paprastesnė.</em></h1>
+
+      <p class="welcome-text">
+        Pasiruošk matematikos VBE savo tempu. Klausk, spręsk uždavinius
+        ir mokykis žingsnis po žingsnio.
+      </p>
+
+      <div class="cards-heading">NUO KO NORĖTUM PRADĖTI?</div>
+
+      <div class="cards">
+
+        <button class="card" onclick="askTopic('Išspręsk lygtį 3x + 7 = 22 ir paaiškink kiekvieną žingsnį.')">
+          <div class="card-top">
+            <div class="card-icon">𝑥</div>
+            <span class="card-arrow">↗</span>
+          </div>
+          <strong>Išspręsti lygtį</strong>
+          <small>Sužinok, kaip rasti nežinomąjį ir patikrinti atsakymą.</small>
+        </button>
+
+        <button class="card" onclick="askTopic('Paaiškink kvadratines funkcijas ir pateik pavyzdį.')">
+          <div class="card-top">
+            <div class="card-icon">⌁</div>
+            <span class="card-arrow">↗</span>
+          </div>
+          <strong>Suprasti funkcijas</strong>
+          <small>Grafikai, savybės ir praktiniai uždaviniai.</small>
+        </button>
+
+        <button class="card" onclick="askTopic('Sukurk tris procentų uždavinius mano pasirinktam VBE kursui.')">
+          <div class="card-top">
+            <div class="card-icon">％</div>
+            <span class="card-arrow">↗</span>
+          </div>
+          <strong>Pasipraktikuoti</strong>
+          <small>Patikrink savo žinias spręsdamas uždavinius.</small>
+        </button>
+
+        <button class="card" onclick="askTopic('Sudaryk matematikos VBE pasiruošimo planą.')">
+          <div class="card-top">
+            <div class="card-icon">✦</div>
+            <span class="card-arrow">↗</span>
+          </div>
+          <strong>Pasiruošti VBE</strong>
+          <small>Susidėliok mokymosi planą.</small>
+        </button>
+
+      </div>
+    </section>
+
+    <section id="chat"></section>
+
+    <div class="composer-wrap">
+      <form class="composer" onsubmit="sendMessage(event)">
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/jpeg,image/png,image/webp"
+          hidden
+          onchange="handleImageSelect(event)"
+        >
+
+        <div class="image-preview" id="imagePreview">
+          <img id="previewImage" alt="Pasirinktos nuotraukos peržiūra">
+          <span class="image-preview-name" id="imagePreviewName"></span>
+          <button class="remove-image" type="button" onclick="removeImage()" aria-label="Pašalinti nuotrauką">×</button>
+        </div>
+
+        <textarea id="input"
+          placeholder="Įrašyk matematikos uždavinį arba paklausk, ko nesupranti..."
+          rows="2"></textarea>
+
+        <div class="composer-bottom">
+          <span class="hint">Enter – siųsti · Shift + Enter – nauja eilutė</span>
+          <div class="composer-actions">
+            <button
+              class="attach-button"
+              type="button"
+              onclick="document.getElementById('imageInput').click()"
+              aria-label="Įkelti nuotrauką"
+              title="Įkelti nuotrauką"
+            >＋</button>
+            <button class="send" id="send" type="submit" aria-label="Siųsti">↑</button>
+          </div>
+        </div>
+      </form>
+
+      <p class="disclaimer">
+        AI gali suklysti. Svarbius skaičiavimus ir atsakymus visada pasitikrink.
+      </p>
+    </div>
+
+  </main>
+</div>
+
+<!-- APIE PROJEKTĄ LANGAS -->
+
+<div class="modal-backdrop" id="aboutModal" onclick="backdropClose(event)">
+  <section class="about-modal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+
+    <div class="modal-header">
+      <div class="modal-brand">
+        <div class="logo">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 7 L93 50 L50 93 L7 50 Z" stroke="#D5F1DF" stroke-width="5"/>
+            <path d="M50 7 V93 M7 50 H93" stroke="#D5F1DF" stroke-width="3" opacity=".8"/>
+            <circle cx="50" cy="50" r="9" fill="#D5F1DF"/>
+          </svg>
+        </div>
+        <div>
+          <h2 id="aboutTitle">Apie projektą</h2>
+          <p>Matematikos pagalba · VBE</p>
+        </div>
+      </div>
+
+      <button class="close-modal" onclick="closeAbout()" aria-label="Uždaryti">×</button>
+    </div>
+
+    <p class="modal-intro">
+      „Matematikos pagalba“ – mokymosi priemonė, skirta padėti mokiniams
+      pasiruošti matematikos valstybiniam brandos egzaminui.
+    </p>
+
+    <div class="authors-label">PROJEKTO AUTORIAI</div>
+
+    <div class="authors">
+      <div class="author"><span class="author-number">01</span> Martynas Vyšniauskas</div>
+      <div class="author"><span class="author-number">02</span> Nedas Ribkauskis</div>
+      <div class="author"><span class="author-number">03</span> Tauras Masiliūnas</div>
+      <div class="author"><span class="author-number">04</span> Tauras Selelionis</div>
+      <div class="author"><span class="author-number">05</span> Aivaras Irnius</div>
+    </div>
+
+    <div class="modal-footer">
+      Matematikos pagalba · Pasiruošimas VBE
+    </div>
+
+  </section>
+</div>
+
+<script>
+  let history = [];
+
+  // ŠVIESUS IR TAMSUS REŽIMAS
+
+  function setTheme(dark) {
+    document.body.classList.toggle("dark", dark);
+
+    const button = document.getElementById("themeToggle");
+
+    if (button) {
+      button.textContent = dark
+        ? "☀ Šviesus režimas"
+        : "☾ Tamsus režimas";
+    }
+
+    try {
+      localStorage.setItem("mathTheme", dark ? "dark" : "light");
+    } catch (e) {}
+  }
+
+  function toggleTheme() {
+    setTheme(!document.body.classList.contains("dark"));
+  }
+
+  try {
+    setTheme(localStorage.getItem("mathTheme") === "dark");
+  } catch (e) {
+    setTheme(false);
+  }
+
+  // APIE PROJEKTĄ LANGAS
+
+  function openAbout() {
+    document.getElementById("aboutModal").classList.add("open");
+  }
+
+  function closeAbout() {
+    document.getElementById("aboutModal").classList.remove("open");
+  }
+
+  function backdropClose(event) {
+    if (event.target.id === "aboutModal") {
+      closeAbout();
+    }
+  }
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") closeAbout();
+  });
+
+  // PASIRINKTAS KURSAS
+
+  function getCourse() {
+    return document.getElementById("course").value;
+  }
+
+  // ŽINUČIŲ ATVAIZDAVIMAS
+
+  function addMessage(text, role) {
+    const chat = document.getElementById("chat");
+    const div = document.createElement("div");
+
+    div.className = "message " + role;
+    div.textContent = text;
+
+    chat.appendChild(div);
+
+    if (role === "assistant" && window.MathJax) {
+      MathJax.typesetPromise([div]).catch(function(){});
+    }
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth"
+    });
+
+    return div;
+  }
+
+  // NUOTRAUKOS PASIRINKIMAS
+
+  let selectedImage = null;
+
+  function handleImageSelect(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+    if (!allowedTypes.includes(file.type)) {
+      alert("Galima įkelti tik JPG, PNG arba WEBP nuotraukas.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 4 * 1024 * 1024) {
+      alert("Nuotrauka per didelė. Pasirink iki 4 MB dydžio nuotrauką.");
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      selectedImage = {
+        mimeType: file.type,
+        base64: String(e.target.result).split(",")[1],
+        dataUrl: e.target.result,
+        name: file.name
+      };
+
+      document.getElementById("previewImage").src = selectedImage.dataUrl;
+      document.getElementById("imagePreviewName").textContent = file.name;
+      document.getElementById("imagePreview").classList.add("visible");
+    };
+
+    reader.onerror = function() {
+      alert("Nepavyko nuskaityti nuotraukos. Pabandyk dar kartą.");
+      removeImage();
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  function removeImage() {
+    selectedImage = null;
+    document.getElementById("imageInput").value = "";
+    document.getElementById("previewImage").removeAttribute("src");
+    document.getElementById("imagePreviewName").textContent = "";
+    document.getElementById("imagePreview").classList.remove("visible");
+  }
+
+  // KLAUSIMO SIUNTIMAS
+
+  function sendMessage(event) {
+    if (event) event.preventDefault();
+
+    const input = document.getElementById("input");
+    const message = input.value.trim();
+    const imageToSend = selectedImage;
+
+    if (!message && !imageToSend) return;
+
+    const course = getCourse();
+
+    if (!course) {
+      alert("Pirmiausia pasirink matematikos A arba B kursą.");
+      document.getElementById("course").focus();
+      return;
+    }
+
+    document.getElementById("welcome").style.display = "none";
+
+    const previousHistory = history.slice();
+
+    const courseLabel = course === "A" ? "A kursas" : "B kursas";
+
+    const messageForAI =
+      "[Mokinio pasirinktas matematikos kursas: " +
+      courseLabel +
+      ". Atsakymą pritaikyk šio kurso lygiui.]\n" +
+      (message || "Išanalizuok nuotraukoje pateiktą matematikos uždavinį.");
+
+    const userMessage = addMessage(
+      message || "Prašau išanalizuoti įkeltą uždavinio nuotrauką.",
+      "user"
+    );
+
+    if (imageToSend) {
+      const img = document.createElement("img");
+      img.src = imageToSend.dataUrl;
+      img.alt = "Mokinio įkelta uždavinio nuotrauka";
+      img.className = "message-image";
+      userMessage.appendChild(img);
+    }
+
+    history.push({
+      role: "user",
+      content: messageForAI
+    });
+
+    input.value = "";
+    removeImage();
+
+    const send = document.getElementById("send");
+    const attach = document.querySelector(".attach-button");
+    send.disabled = true;
+    attach.disabled = true;
+
+    const waiting = addMessage("Galvoju...", "assistant");
+
+    const runner = google.script.run
+      .withSuccessHandler(function(answer) {
+        waiting.textContent = answer;
+
+        history.push({
+          role: "assistant",
+          content: answer
+        });
+
+        if (window.MathJax) {
+          MathJax.typesetPromise([waiting]).catch(function(){});
+        }
+
+        send.disabled = false;
+        attach.disabled = false;
+        input.focus();
+      })
+      .withFailureHandler(function(error) {
+        waiting.textContent = "Klaida: " + error.message;
+        send.disabled = false;
+        attach.disabled = false;
+        input.focus();
+      });
+
+    if (imageToSend) {
+      runner.askMathAIWithImage(
+        messageForAI,
+        previousHistory,
+        imageToSend.mimeType,
+        imageToSend.base64
+      );
+    } else {
+      runner.askMathAI(messageForAI, previousHistory);
+    }
+  }
+
+  // TEMŲ MYGTUKAI
+
+  function askTopic(text) {
+    document.getElementById("input").value = text;
+    sendMessage();
+  }
+
+  // NAUJAS POKALBIS
+
+  function newChat() {
+    history = [];
+    document.getElementById("chat").innerHTML = "";
+    document.getElementById("welcome").style.display = "block";
+    document.getElementById("input").value = "";
+    removeImage();
+    document.getElementById("input").focus();
+  }
+
+  // ENTER SIUNČIA KLAUSIMĄ
+
+  document.getElementById("input").addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+</script>
+
+</body>
+</html>
